@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard Conducteur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+</head>
+<body>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+    * {
+        padding: 0;
+        margin: 0;
+        text-decoration: none;
+        list-style: none;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Montserrat", sans-serif;
+    }
+
+    /* Style pour la barre de navigation */
+    nav {
+        background: #0082e6;
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        flex-wrap: nowrap;  /* Empêche le retour à la ligne */
+    }
+
+    /* Logo de la barre de navigation */
+    label.logo {
+        color: white;
+        font-size: 25px;
+        font-weight: bold;
+    }
+
+    /* Liens de la barre de navigation */
+    .navbar-links {
+        display: flex;
+        gap: 20px;  /* Espacement entre les liens */
+    }
+
+    .navbar-links a {
+        color: white;
+        font-size: 17px;
+        padding: 10px 20px;
+        border-radius: 3px;
+        text-transform: uppercase;
+    }
+
+    .navbar-links a.active, .navbar-links a:hover {
+        background: #1b9bff;
+        transition: 0.5s;
+    }
+
+    /* Conteneur des éléments à droite (email et bouton) */
+    .right-items {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .email-display {
+        color: white;
+        font-size: 18px;
+    }
+
+    .rating-btn {
+        background-color: #ffc107;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        padding: 5px 10px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .rating-btn i {
+        margin-right: 5px;
+    }
+
+    a.active,
+    a:hover {
+        background: #1b9bff;
+        transition: .5s;
+        text-decoration: none;
+        list-style-type: none;
+    }
+
+
+    /* Formulaire centré */
+    section {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 80px); /* Calcul de la hauteur en fonction de la taille du navbar */
+    }
+
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%; /* S'assure que le conteneur occupe toute la hauteur */
+    }
+
+    form {
+        max-width: 400px;
+        width: 100%;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Nouveau bouton de déconnexion */
+    .logout-btn {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    .logout-btn i {
+        margin-right: 5px;
+    }
+
+</style>
+
+<nav>
+    <label class="logo">Co-voiturage</label>
+    <div class="navbar-links">
+        <a  href="/dashboardConducteur">Vos trajets</a>
+        <a class="active" href="#">Ajouter un trajet</a>
+    </div>
+    <div class="right-items">
+        <span class="email-display">Conducteur: <span id="email">[email@example.com]</span></span>
+        <button class="rating-btn">
+            <i class="fa fa-star"></i>
+            <span id="average-rating">Chargement...</span>
+        </button>
+        <!-- Nouveau bouton de déconnexion -->
+        <button class="logout-btn" onclick="deconnecter()">
+            <i class="fa fa-sign-out-alt"></i>
+        </button>
+    </div>
+</nav>
+
+<section class="form-container">
+    <form id="ajouterTrajetForm" class="border p-4 shadow-sm bg-light w-100" style="max-width: 400px;">
+        <div class="mb-3">
+            <label for="depart" class="form-label font-weight-bold">Ville de départ</label>
+            <input type="text" class="form-control" id="depart" required>
+        </div>
+        <div class="mb-3">
+            <label for="destination" class="form-label font-weight-bold">Ville de destination</label>
+            <input type="text" class="form-control" id="destination" required>
+        </div>
+        <div class="mb-3">
+            <label for="date" class="form-label font-weight-bold">Date de départ</label>
+            <input type="date" class="form-control" id="date" required>
+        </div>
+        <div class="mb-3">
+            <label for="time" class="form-label font-weight-bold">Heure de départ</label>
+            <select class="form-control" id="time" required>
+                <option value="00:00">00:00</option>
+                <option value="01:00">01:00</option>
+                <option value="02:00">02:00</option>
+                <option value="03:00">03:00</option>
+                <option value="04:00">04:00</option>
+                <option value="05:00">05:00</option>
+                <option value="06:00">06:00</option>
+                <option value="07:00">07:00</option>
+                <option value="08:00">08:00</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
+                <option value="19:00">19:00</option>
+                <option value="20:00">20:00</option>
+                <option value="21:00">21:00</option>
+                <option value="22:00">22:00</option>
+                <option value="23:00">23:00</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="placeDispo" class="form-label font-weight-bold">Nombre de places disponibles</label>
+            <input type="number" class="form-control" id="placeDispo" required>
+        </div>
+        <div class="mb-3">
+            <label for="prixPlace" class="form-label font-weight-bold">Prix par place (Dt)</label>
+            <input type="number" class="form-control" id="prixPlace" required>
+        </div>
+        <div class="mb-3">
+            <label for="com" class="form-label font-weight-bold">Commentaire</label>
+            <textarea type="text" class="form-control" id="com" cols="30" rows="4"></textarea>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+            <button type="reset" class="btn btn-danger">Annuler</button>
+        </div>
+
+    </form>
+</section>
+
+<script>
+    // Récupérer l'email depuis le stockage local
+    const emailElement = document.getElementById('email');
+    const userEmail = localStorage.getItem('userEmail') || "email_non_disponible@example.com";
+    emailElement.textContent = userEmail;
+
+    window.onload = function() {
+        recupererMoyenneNotes();
+    };
+
+    // Fonction pour récupérer la moyenne des notes de l'utilisateur
+    async function recupererMoyenneNotes() {
+        const averageRatingElement = document.getElementById('average-rating');
+        try {
+            if (!userEmail) {
+                throw new Error("Email utilisateur non défini");
+            }
+
+            const response = await fetch(`http://localhost:8082/api/moyenne-avis?email=${userEmail}`);
+            console.log("Réponse de l'API reçue:", response);
+
+            if (!response.ok) {
+                throw new Error("Erreur dans la réponse de l'API");
+            }
+
+            const moyenneAvis = await response.json();
+
+            if (moyenneAvis != null) {
+                averageRatingElement.textContent = moyenneAvis.toFixed(2);
+            } else {
+                throw new Error("Moyenne des avis invalide");
+            }
+
+        } catch (error) {
+            console.error("Erreur lors de la récupération de la moyenne des notes:", error);
+            averageRatingElement.textContent = "Erreur";
+        }
+    }
+
+    const form = document.getElementById('ajouterTrajetForm');
+    form.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        // Récupérer l'email depuis localStorage
+        const email = localStorage.getItem('userEmail');  // Récupérer l'email enregistré dans localStorage
+
+        // Si l'email n'est pas trouvé dans localStorage
+        if (!email) {
+            alert('Utilisateur non connecté');
+            return;
+        }
+
+        const data = {
+            depart: document.getElementById('depart').value,
+            destination: document.getElementById('destination').value,
+            date: document.getElementById('date').value,
+            time: document.getElementById('time').value,
+            placeDispo: document.getElementById('placeDispo').value,
+            prixPlace: document.getElementById('prixPlace').value,
+            com: document.getElementById('com').value,
+        };
+
+        try {
+            const response = await fetch(`http://localhost:8082/api/ajouter?email=${encodeURIComponent(email)}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                alert('Trajet ajouté avec succès');
+                form.reset(); // Réinitialiser le formulaire après la soumission
+            } else {
+                alert('Erreur lors de l\'ajout du trajet');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Erreur réseau');
+        }
+    });
+    // Fonction de déconnexion
+    function deconnecter() {
+        // Supprimer l'email du stockage local (ou toute autre info de session)
+        localStorage.removeItem('userEmail');
+        // Rediriger vers la page index.html
+        window.location.href = '/';
+    }
+</script>
+</body>
+</html>
